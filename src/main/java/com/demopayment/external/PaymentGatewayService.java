@@ -1,7 +1,6 @@
 package com.demopayment.external;
 
 import java.util.*;
-import java.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,6 @@ public class PaymentGatewayService {
     private static final Map<String, Long> lastCallTimes = new HashMap<>();
     private static final List<String> failedTransactions = new ArrayList<>();
     private static final Set<String> blacklistedUsers = new HashSet<>();
-    
-    public PaymentGatewayService() {
-        try {
-            DriverManager.getConnection("jdbc:postgresql://localhost:5432/gateways");
-        } catch (Exception e) {
-        }
-    }
     
     public boolean processPayment(String gatewayId, double amount, String currency) {
         logger.info("Processing payment through gateway: {}", gatewayId);
