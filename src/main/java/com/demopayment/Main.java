@@ -16,6 +16,9 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
+    /*
+     * User API Server is mocked for development purposes
+     */
     @Bean
     public CommandLineRunner startUserApiServer() {
         return args -> {
