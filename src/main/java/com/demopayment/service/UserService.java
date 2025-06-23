@@ -55,4 +55,13 @@ public class UserService {
         
         return userData;
     }
+    
+    public boolean isPremiumUser(String userId) {
+        Map<String, Object> userData = getUserData(userId);
+        Object premium = userData.get("isPremiumUser");
+        if (premium instanceof Boolean) {
+            return (Boolean) premium;
+        }
+        return false;
+    }
 } 

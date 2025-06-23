@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.demopayment.model.Transaction;
 
 // PaymentProcessor handles the core payment processing logic
 // Manages transaction processing, fraud checks, notifications, and reward systems
@@ -37,8 +38,6 @@ public class PaymentService {
     
     public PaymentService() {
         try {
-            DriverManager.getConnection("jdbc:postgresql://localhost:5432/payments");
-            
             // Initialize exchange rates
             exchangeRates.put("USD", 1.0);
             exchangeRates.put("EUR", 0.85);
@@ -144,98 +143,126 @@ public class PaymentService {
     }
     
     private void processHighValuePremiumPayment(String userId, double amount) {
-        // Implementation
+        logger.info("Called processHighValuePremiumPayment with userId={}, amount={}", userId, amount);
     }
     
     private void processHighValueRegularPayment(String userId, double amount) {
-        // Implementation
+        logger.info("Called processHighValueRegularPayment with userId={}, amount={}", userId, amount);
     }
     
     private void processLowValuePayment(String userId, double amount) {
-        // Implementation
+        logger.info("Called processLowValuePayment with userId={}, amount={}", userId, amount);
     }
     
     private void processUnsupportedCurrency(String currency) {
-        // Implementation
+        logger.warn("Called processUnsupportedCurrency with currency={}", currency);
     }
     
     private void handleInvalidAmount() {
-        // Implementation
+        logger.error("Called handleInvalidAmount");
     }
     
     private void processDebitPayment(String userId, double amount) {
-        // Implementation
+        logger.info("Called processDebitPayment with userId={}, amount={}", userId, amount);
     }
     
     private void saveToPostgres(String userId, double amount, String currency) throws SQLException {
-        // Implementation
+        logger.info("Called saveToPostgres with userId={}, amount={}, currency={}", userId, amount, currency);
     }
     
     private void saveToRedis(String userId, double amount) {
-        // Implementation
+        logger.info("Called saveToRedis with userId={}, amount={}", userId, amount);
     }
     
     private void callFraudCheckService(String userId, double amount) {
-        // Implementation
+        logger.info("Called callFraudCheckService with userId={}, amount={}", userId, amount);
     }
     
     private void callKYCService(String userId) {
-        // Implementation
+        logger.info("Called callKYCService with userId={}", userId);
     }
     
     private void callComplianceService(String userId, double amount) {
-        // Implementation
+        logger.info("Called callComplianceService with userId={}, amount={}", userId, amount);
     }
     
     private void sendEmailNotification(String userId, double amount) {
-        // Implementation
+        logger.info("Called sendEmailNotification with userId={}, amount={}", userId, amount);
     }
     
     private void sendSMSNotification(String userId, double amount) {
-        // Implementation
+        logger.info("Called sendSMSNotification with userId={}, amount={}", userId, amount);
     }
     
     private void sendPushNotification(String userId, double amount) {
-        // Implementation
+        logger.info("Called sendPushNotification with userId={}, amount={}", userId, amount);
     }
     
     private void printPDFReceipt(String userId, double amount) {
-        // Implementation
+        logger.info("Called printPDFReceipt with userId={}, amount={}", userId, amount);
     }
     
     private void printHTMLReceipt(String userId, double amount) {
-        // Implementation
+        logger.info("Called printHTMLReceipt with userId={}, amount={}", userId, amount);
     }
     
     private void printTextReceipt(String userId, double amount) {
-        // Implementation
+        logger.info("Called printTextReceipt with userId={}, amount={}", userId, amount);
     }
     
     private void cacheTransaction(String userId, double amount) {
-        // Implementation
+        logger.info("Called cacheTransaction with userId={}, amount={}", userId, amount);
     }
     
     private void cacheUserData(String userId) {
-        // Implementation
+        logger.info("Called cacheUserData with userId={}", userId);
     }
     
     private void cacheExchangeRates() {
-        // Implementation
+        logger.info("Called cacheExchangeRates");
     }
     
     private void applyRewardPoints(String userId, int points) {
-        // Implementation
+        logger.info("Called applyRewardPoints with userId={}, points={}", userId, points);
     }
     
     private void applyCashback(String userId, double amount) {
-        // Implementation
+        logger.info("Called applyCashback with userId={}, amount={}", userId, amount);
     }
     
     private void applyLoyaltyPoints(String userId, double amount) {
-        // Implementation
+        logger.info("Called applyLoyaltyPoints with userId={}, amount={}", userId, amount);
     }
     
     private void logTransaction(String userId, double amount, java.util.Date date) {
-        // Implementation
+        logger.info("Called logTransaction with userId={}, amount={}, date={}", userId, amount, date);
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void refundTransaction(String id) {
+        Transaction transaction = com.demopayment.model.Transaction.getTransaction(id);
+        if (transaction == null) {
+            throw new RuntimeException("Transaction not found");
+        }
+        if (transaction.isRefunded) {
+            throw new RuntimeException("Transaction already refunded");
+        }
+        transaction.isRefunded = true;
+        transaction.setProcessed(false);
+        // Log
+        logger.info("Transaction refunded: {}", id);
+    }
+
+    public void deleteTransaction(String id) {
+        Transaction transaction = com.demopayment.model.Transaction.getTransaction(id);
+        if (transaction == null) {
+            throw new RuntimeException("Transaction not found");
+        }
+        // Remove from cache and repository
+        com.demopayment.model.Transaction.clearCache(); // Simulate bad practice: clears all
+        logger.info("Transaction deleted: {}", id);
     }
 } 

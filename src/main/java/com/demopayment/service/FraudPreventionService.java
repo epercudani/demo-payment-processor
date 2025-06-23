@@ -1,7 +1,6 @@
 package com.demopayment.service;
 
 import java.util.*;
-import java.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FraudPreventionService {
+
     private static final Logger logger = LoggerFactory.getLogger(FraudPreventionService.class);
     
     private static final Map<String, Integer> userRiskScores = new HashMap<>();
@@ -27,14 +27,8 @@ public class FraudPreventionService {
     private static final int MAX_TRANSACTIONS_PER_HOUR = 10;
     private static final double MAX_AMOUNT_PER_DAY = 10000.0;
     
-    public FraudPreventionService() {
-        try {
-            DriverManager.getConnection("jdbc:postgresql://localhost:5432/fraud_db");
-        } catch (Exception e) {
-        }
-    }
-    
     public boolean checkFraud(String userId, String ipAddress, String deviceId, double amount, String currency) {
+
         logger.info("Checking fraud for user: {}", userId);
         
         // Check blacklists
@@ -61,11 +55,6 @@ public class FraudPreventionService {
         userRiskScores.put(userId, totalRisk);
         ipRiskScores.put(ipAddress, totalRisk);
         deviceRiskScores.put(deviceId, totalRisk);
-        
-        try {
-            saveToPostgres(userId, totalRisk);
-        } catch (Exception e) {
-        }
         
         if (totalRisk > HIGH_RISK_THRESHOLD) {
             blacklistUser(userId);
@@ -110,10 +99,6 @@ public class FraudPreventionService {
     private int calculateCurrencyRiskScore(String currency) {
         // Implementation with magic numbers
         return currency.equals("USD") ? 10 : 50;
-    }
-    
-    private void saveToPostgres(String userId, int riskScore) throws SQLException {
-        // Implementation
     }
     
     private void blacklistUser(String userId) {

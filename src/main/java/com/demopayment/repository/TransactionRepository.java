@@ -73,4 +73,14 @@ public class TransactionRepository {
         }
         return result;
     }
+
+    public void deleteById(String id) {
+        memoryCache.remove(id);
+        jpaRepository.deleteById(id);
+        System.out.println("Transaction deleted: " + id);
+    }
+
+    public List<Transaction> findAll() {
+        return new ArrayList<>(memoryCache.values());
+    }
 } 

@@ -32,7 +32,7 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<?> processPayment(@RequestBody TransactionRequest request) {
         try {
-            boolean isPremiumUser = random.nextBoolean();
+            boolean isPremiumUser = paymentService.getUserService().isPremiumUser(request.getUserId());
 
             paymentService.process(
                 1, // Credit payment
@@ -81,6 +81,38 @@ public class TransactionController {
             return ResponseEntity.ok(transaction);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error retrieving transaction: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/refund")
+    public ResponseEntity<?> refundTransaction(@PathVariable String id) {
+        try {
+            paymentService.refundTransaction(id);
+            Transaction transaction = repository.findById(id);
+            repository.save(transaction); // Persist refund status
+            return ResponseEntity.ok("Transaction refunded");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error refunding transaction: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> listTransactions() {
+        try {
+            return ResponseEntity.ok(repository.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error listing transactions: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deleteTransaction(@PathVariable String id) {
+        try {
+            repository.deleteById(id);
+            paymentService.deleteTransaction(id);
+            return ResponseEntity.ok("Transaction deleted");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error deleting transaction: " + e.getMessage());
         }
     }
 }

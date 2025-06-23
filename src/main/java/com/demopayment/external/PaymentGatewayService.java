@@ -83,7 +83,7 @@ public class PaymentGatewayService {
         
         if (lastCallTime != null) {
             long timeDiff = currentTime - lastCallTime;
-            if (timeDiff < 1000) { // 1 second
+            if (timeDiff < 5000) { // 5 second
                 return false;
             }
         }

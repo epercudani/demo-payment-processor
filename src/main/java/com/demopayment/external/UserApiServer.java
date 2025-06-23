@@ -37,6 +37,7 @@ public class UserApiServer {
         merchant.put("balance", 25000.00);
         merchant.put("currency", "USD");
         merchant.put("preferences", generateMockPreferences());
+        merchant.put("isPremiumUser", true);
         initializedUsers.put("1001", merchant);
         
         // Payer user
@@ -53,6 +54,7 @@ public class UserApiServer {
         payer.put("balance", 1500.00);
         payer.put("currency", "USD");
         payer.put("preferences", generateMockPreferences());
+        payer.put("isPremiumUser", false);
         initializedUsers.put("2001", payer);
         
         // Another merchant
@@ -69,6 +71,7 @@ public class UserApiServer {
         merchant2.put("balance", 18000.00);
         merchant2.put("currency", "USD");
         merchant2.put("preferences", generateMockPreferences());
+        merchant2.put("isPremiumUser", true);
         initializedUsers.put("1002", merchant2);
     }
     
